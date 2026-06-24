@@ -75,9 +75,10 @@ header {
   /* Main padding */
   main { padding: 10px 12px; }
 
-  /* Filter bar */
+  /* Filter bar — alinhado à esquerda */
   .period-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .period-inputs { flex-direction: column; gap: 10px; width: 100%; }
+  .period-inputs { flex-direction: column; gap: 10px; width: 100%; align-items: flex-start; }
+  .period-group { align-items: flex-start; width: 100%; }
   .period-group select { width: 100%; font-size:14px; padding: 8px 10px; }
   .period-sep { display: none; }
   .btn-apply { width: 100%; padding: 10px; font-size:14px; margin-top:4px; }
@@ -169,9 +170,11 @@ header {
 .kpi-card.ticket .kpi-card-title { color: rgba(255,255,255,.92); }
 
 .kpi-card.qs-entradas { background:linear-gradient(135deg,#1a6e3a,#27a854); }
+.kpi-card.qs-retencao { background:linear-gradient(135deg,#0d4a6e,#1a7abf); }
 .kpi-card.qs-saidas   { background:linear-gradient(135deg,#8a4a0f,#d9791e); }
 .kpi-card.qs-socios   { background:linear-gradient(135deg,#1a4a7a,#2b7fc4); }
 .kpi-card.qs-entradas .kpi-card-title,
+.kpi-card.qs-retencao .kpi-card-title,
 .kpi-card.qs-saidas .kpi-card-title,
 .kpi-card.qs-socios .kpi-card-title { color: rgba(255,255,255,.92); }
 
@@ -211,6 +214,7 @@ header {
 .chart-section {
   background:var(--card); border:1px solid var(--border);
   border-radius:10px; padding:12px 14px; overflow:visible;
+  display:flex; flex-direction:column;
 }
 .chart-title {
   font-size:10px; font-weight:800; letter-spacing:2px;
@@ -233,14 +237,51 @@ header {
 .leg-val   { font-size:10px; color:var(--muted); }
 .leg-val strong { color:var(--text); font-weight:800; font-size:11px; }
 
-/* ── Hover-expand para gráfico de Frequentadores — controlado pelo canvas ── */
+/* ── QS donut solo hover (desligamentos ranking / exclusões inadimplência) ── */
+.qs-solo-legend { min-width:200px; max-width:280px; overflow:visible; }
+.qs-solo-card { background:var(--card); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; }
+.qs-solo-header { display:flex; align-items:center; gap:8px; }
+.qs-solo-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+.qs-solo-name { font-size:12px; font-weight:700; color:var(--text); flex:1; }
+.qs-solo-val { font-size:14px; font-weight:800; color:var(--text); }
+.qs-solo-sub { font-size:10px; color:var(--muted); line-height:1.4; }
+.qs-rank-title { font-size:9px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; margin-top:2px; }
+.qs-rank-row { display:flex; align-items:center; gap:6px; margin-top:4px; }
+.qs-rank-pos { font-size:11px; width:18px; text-align:center; flex-shrink:0; }
+.qs-rank-info { flex:1; }
+.qs-rank-label { font-size:10px; color:var(--text); font-weight:600; }
+.qs-rank-bar-wrap { height:3px; background:var(--border); border-radius:2px; margin-top:2px; }
+.qs-rank-bar { height:100%; border-radius:2px; }
+.qs-rank-val { font-size:11px; font-weight:700; color:var(--text); white-space:nowrap; text-align:right; }
+.qs-rank-val small { font-size:9px; color:var(--muted); font-weight:400; }
+.qs-no-data { font-size:10px; color:var(--yellow); margin-top:4px; }
+.qs-inadim-block { margin-top:4px; }
+.qs-inadim-val { font-size:24px; font-weight:800; line-height:1; margin-top:4px; }
+.qs-inadim-label { font-size:10px; color:var(--muted); margin-top:2px; }
 .leg-row-freq { border-radius:6px; padding:3px 5px; transition:background .2s; cursor:default; align-items:flex-start; }
 .leg-detail { max-height:0; overflow:hidden; transition:max-height .3s ease, opacity .3s ease; opacity:0; display:flex; flex-direction:column; gap:2px; margin-top:0; }
-#pizzaLegendFreq { transition: opacity .2s ease; opacity:0; pointer-events:none; min-width:180px; }
+#pizzaLegendFreq { transition: opacity .15s ease; opacity:0; pointer-events:none; flex:1; }
+
+/* ── Ranking fixo de Motivos de Desligamento ── */
+.desl-rank-summary { display:flex; gap:24px; margin-bottom:14px; flex-wrap:wrap; }
+.desl-rank-sum-item { display:flex; flex-direction:column; }
+.desl-rank-sum-label { font-size:9px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.desl-rank-sum-val { font-size:24px; font-weight:800; color:var(--text); }
+.desl-rank-rows-wrap { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:4px 24px; }
+.desl-rank-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+.desl-rank-row:last-child { border-bottom:none; }
+.desl-rank-pos { font-size:22px; width:32px; text-align:center; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.desl-rank-info { flex:1; }
+.desl-rank-label { font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.desl-rank-bar-wrap { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+.desl-rank-bar { height:100%; border-radius:3px; transition:width .5s ease; }
+.desl-rank-right { text-align:right; flex-shrink:0; min-width:44px; }
+.desl-rank-qty { font-size:20px; font-weight:800; color:var(--text); }
+.desl-rank-pct { font-size:10px; color:var(--muted); }
 
 /* Legenda solo (uma categoria por vez) */
-.freq-legend-solo { flex:1; min-width:180px; max-width:260px; overflow:visible; }
-.freq-solo-card { background:var(--card); border-radius:8px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box; }
+.freq-legend-solo { flex:1; overflow:hidden; align-self:stretch; }
+.freq-solo-card { background:var(--surface); border-radius:8px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; width:100%; height:100%; box-sizing:border-box; border-left:4px solid transparent; }
 .freq-solo-header { display:flex; align-items:center; gap:8px; }
 .freq-solo-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
 .freq-solo-name { font-size:13px; font-weight:700; color:var(--text); flex:1; }
@@ -326,7 +367,7 @@ header {
   align-items:stretch;
 }
 
-.chart-section { display:flex; flex-direction:column; flex:1; }
+.chart-body { display:flex; align-items:flex-start; gap:16px; flex-wrap:nowrap; flex:1; overflow:visible; }
 .chart-body { display:flex; align-items:center; gap:16px; flex-wrap:nowrap; flex:1; overflow:visible; }
 
 .fade { animation:fi .3s ease; }
@@ -471,11 +512,16 @@ header {
     <div class="section-title">Quadro Social</div>
 
     <!-- ═══════ 3 CAIXAS EM LINHA ═══════ -->
-    <div class="kpi-row-4" id="kpiRowQS" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="kpi-row-4" id="kpiRowQS" style="grid-template-columns: repeat(4, 1fr);">
       <div class="kpi-card qs-entradas" id="cardEntradas" onclick="selectCardQS('entradas')">
         <div class="kpi-card-title">Entradas</div>
         <div class="kpi-card-value" id="valEntradas">—</div>
         <div class="kpi-arrows" id="arrEntradas"></div>
+      </div>
+      <div class="kpi-card qs-retencao" id="cardRetencao">
+        <div class="kpi-card-title">Retenção</div>
+        <div class="kpi-card-value" id="valRetencao">—</div>
+        <div class="kpi-arrows" id="arrRetencao"></div>
       </div>
       <div class="kpi-card qs-saidas" id="cardSaidas" onclick="selectCardQS('saidas')">
         <div class="kpi-card-title">Saídas</div>
@@ -490,8 +536,8 @@ header {
     </div>
 
     <!-- ═══════ DONUTS QUADRO SOCIAL ═══════ -->
-    <div class="chart-row-2">
-      <div class="chart-section">
+    <div class="chart-row-2" id="qsChartsRow">
+      <div class="chart-section" id="chartSectionQS">
         <div class="chart-title" id="chartTitleQS">Composição — Quadro Social</div>
         <div class="chart-subtitle" id="chartSubtitleQS">Clique em um dos indicadores acima para ver sua composição</div>
         <div class="chart-body" id="chartBodyQS">
@@ -499,13 +545,29 @@ header {
           <div class="pizza-legend" id="pizzaLegendQS"></div>
         </div>
       </div>
-      <div class="chart-section">
+      <div class="chart-section" id="chartSectionFreq">
         <div class="chart-title" id="chartTitleFreq">Composição de Frequentadores</div>
-        <div class="chart-subtitle" id="chartSubtitleFreq">Passe o mouse sobre a legenda para ver titulares e dependentes</div>
-        <div class="chart-body" id="chartBodyFreq">
-          <canvas id="pizzaCanvasFreq" width="130" height="130"></canvas>
-          <div class="pizza-legend" id="pizzaLegendFreq"></div>
+        <div class="chart-subtitle" id="chartSubtitleFreq">Clique em uma fatia para ver os detalhes</div>
+        <div class="chart-body" id="chartBodyFreq" style="position:relative; display:flex; align-items:stretch; gap:0; min-height:160px;">
+          <div style="width:155px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+            <canvas id="pizzaCanvasFreq" width="130" height="130"></canvas>
+          </div>
+          <div class="pizza-legend freq-legend-solo" id="pizzaLegendFreq"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- ═══════ RANKINGS — MOTIVOS + FREQUÊNCIA ═══════ -->
+    <div class="chart-row-2" id="rankingsRow" style="margin-top:12px; display:none;">
+      <div class="chart-section" id="rankingDeslSection" style="display:none;">
+        <div class="chart-title">MOTIVOS DE DESLIGAMENTO</div>
+        <div class="chart-subtitle" id="rankingDeslSubtitle"></div>
+        <div id="rankingDeslBody" style="margin-top:10px;"></div>
+      </div>
+      <div class="chart-section" id="rankingFreqSection" style="display:none;">
+        <div class="chart-title">FREQUÊNCIA POR CATEGORIA</div>
+        <div class="chart-subtitle" id="rankingFreqSubtitle"></div>
+        <div id="rankingFreqBody" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -858,6 +920,64 @@ const ACESSO = {
   }
 };
 
+// ═══════════════════════════════════════════════════════════
+//  RETENCAO — % de retenção mensal (acumulada no ano)
+//  Fonte: planilha Retenção_-_planilha_associações.xlsx
+//  retReal = % retido realizado (último mês do período = estoque)
+//  retOrc  = % retido orçado
+//  retAnt  = % retido mesmo mês ano anterior
+// ═══════════════════════════════════════════════════════════
+const RETENCAO = {
+  2024: {
+    1:{retReal:0.9848, retOrc:0.9845, retAnt:0.9850}, 2:{retReal:0.9705, retOrc:0.9698, retAnt:0.9605},
+    3:{retReal:0.9370, retOrc:0.9387, retAnt:0.9124}, 4:{retReal:0.8820, retOrc:0.9005, retAnt:0.8784},
+    5:{retReal:0.8395, retOrc:0.8615, retAnt:0.8182}, 6:{retReal:0.8011, retOrc:0.8327, retAnt:0.7940},
+    7:{retReal:0.7789, retOrc:0.8118, retAnt:0.7675}, 8:{retReal:0.7624, retOrc:0.7954, retAnt:0.7499},
+    9:{retReal:0.7456, retOrc:0.7781, retAnt:0.7424}, 10:{retReal:0.7364, retOrc:0.7671, retAnt:0.7252},
+    11:{retReal:0.7207, retOrc:0.7561, retAnt:0.7110}, 12:{retReal:0.7091, retOrc:0.7459, retAnt:0.6940},
+  },
+  2025: {
+    1:{retReal:0.9848, retOrc:0.9845, retAnt:0.9848}, 2:{retReal:0.9665, retOrc:0.9698, retAnt:0.9705},
+    3:{retReal:0.9275, retOrc:0.9387, retAnt:0.9370}, 4:{retReal:0.8803, retOrc:0.9005, retAnt:0.8820},
+    5:{retReal:0.8293, retOrc:0.8615, retAnt:0.8395}, 6:{retReal:0.7973, retOrc:0.8327, retAnt:0.8011},
+    7:{retReal:0.7729, retOrc:0.8118, retAnt:0.7789}, 8:{retReal:0.7555, retOrc:0.7954, retAnt:0.7624},
+    9:{retReal:0.7427, retOrc:0.7781, retAnt:0.7456}, 10:{retReal:0.7330, retOrc:0.7671, retAnt:0.7364},
+    11:{retReal:0.7248, retOrc:0.7561, retAnt:0.7207}, 12:{retReal:0.7153, retOrc:0.7459, retAnt:0.7091},
+  },
+  2026: {
+    1:{retReal:0.9823, retOrc:0.9818, retAnt:0.9848}, 2:{retReal:0.9623, retOrc:0.9610, retAnt:0.9665},
+    3:{retReal:0.9217, retOrc:0.9346, retAnt:0.9275}, 4:{retReal:0.8741, retOrc:0.8968, retAnt:0.8803},
+    5:{retReal:0.8351, retOrc:0.8656, retAnt:0.8293},
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+//  INADIM — % inadimplência por sócios (último mês disponível)
+//  Fonte: planilha Inadimplencia_-_planilha_PA_Associações.xlsx col49 (SÓCIOS)
+// ═══════════════════════════════════════════════════════════
+const INADIM = {
+  2025: {
+    1:0.1193, 2:0.1067, 3:0.1250, 4:0.1245, 5:0.1330, 6:0.1284,
+    7:0.1126, 8:0.1091, 9:0.1145, 10:0.1099, 11:0.1180, 12:0.1121,
+  },
+  2026: {
+    1:0.1206, // demais meses em fechamento
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+//  DESL_MOTIVOS — motivos de desligamento por mês
+//  Fonte: planilha Desligamento_e_retenção_maio_e_junho.xlsx
+//  sol = solicitações, ret = retidos, motivos = {motivo: qtd}
+// ═══════════════════════════════════════════════════════════
+const DESL_MOTIVOS = {
+  2026: {
+    5: { sol:53, ret:8,  motivos:{'Não utilização':25,'Financeiro':18,'Mudança':8,'Sem motivo':3} },
+    6: { sol:15, ret:11, motivos:{'Não utilização':5,'Financeiro':2,'Mudança':2,'Localização':1,'Saúde':1} },
+    7: { sol:9,  ret:8,  motivos:{'Não utilização':3,'Financeiro':2,'Mudança':1,'Saúde':1,'Desemprego':1} },
+  }
+};
+
 function getMesesQS(mesIni, anoIni, mesFim, anoFim) {
   const result = [];
   let a = anoIni, m = mesIni;
@@ -931,14 +1051,30 @@ function renderQS() {
   const meses = getMesesQS(mesIni, anoIni, mesFim, anoFim);
 
   if (meses.length === 0) {
-    ['valEntradas','valSaidas','valSocios'].forEach(id => document.getElementById(id).textContent = '—');
-    ['arrEntradas','arrSaidas','arrSocios'].forEach(id => document.getElementById(id).innerHTML = '');
+    ['valEntradas','valSaidas','valSocios','valRetencao'].forEach(id => document.getElementById(id).textContent = '—');
+    ['arrEntradas','arrSaidas','arrSocios','arrRetencao'].forEach(id => document.getElementById(id).innerHTML = '');
     showEmptyChartQS();
     showEmptyChartFreq();
+    document.getElementById('rankingFreqSection').style.display = 'none';
+    document.getElementById('rankingDeslSection').style.display = 'none';
+    updateRankingsRow();
     return;
   }
 
   const s = somaPeriodoQS(meses);
+  const last = meses[meses.length-1];
+
+  // Retenção — usa ÚLTIMO mês do período (estoque/acumulado no ano)
+  const retD = RETENCAO[last.ano] && RETENCAO[last.ano][last.mes];
+  if (retD) {
+    document.getElementById('valRetencao').textContent = (retD.retReal * 100).toFixed(1) + '%';
+    document.getElementById('arrRetencao').innerHTML =
+      arrowHTMLqs(retD.retReal, retD.retOrc, true, 'vs. Orçado') +
+      (retD.retAnt ? arrowHTMLqs(retD.retReal, retD.retAnt, true, 'vs. Ano anterior') : '');
+  } else {
+    document.getElementById('valRetencao').textContent = '—';
+    document.getElementById('arrRetencao').innerHTML = '';
+  }
 
   // Entradas (maior é melhor)
   document.getElementById('valEntradas').textContent = fmtInt(s.entrR);
@@ -958,8 +1094,9 @@ function renderQS() {
     arrowHTMLqs(s.titReal, s.titOrc, true, 'vs. Orçado') +
     (s.titRealAnt !== null ? arrowHTMLqs(s.titReal, s.titRealAnt, true, 'vs. Ano anterior') : '');
 
-  renderPizzaQS(s);
+  renderPizzaQS(s, meses);
   renderPizzaFreq(meses);
+  renderRankingFreq();
 }
 
 function arrowHTMLqs(curr, base, higherIsBetter, label) {
@@ -989,11 +1126,11 @@ function showEmptyChartQS() {
     </div>`;
 }
 
-function renderPizzaQS(s) {
+function renderPizzaQS(s, meses) {
+  const last = meses[meses.length-1];
   const body = document.getElementById('chartBodyQS');
-  if (!document.getElementById('pizzaCanvasQS')) {
-    body.innerHTML = '<canvas id="pizzaCanvasQS" width="130" height="130"></canvas><div class="pizza-legend" id="pizzaLegendQS"></div>';
-  }
+  // Always rebuild to ensure clean canvas
+  body.innerHTML = '<canvas id="pizzaCanvasQS" width="130" height="130"></canvas><div class="pizza-legend" id="pizzaLegendQS"></div>';
 
   let data, title, subtitle;
 
@@ -1065,6 +1202,190 @@ function renderPizzaQS(s) {
   });
   legElQS.className = data.length > 4 ? 'pizza-legend multi-col' : 'pizza-legend';
   legElQS.innerHTML = legHTML;
+
+  // ── Canvas hover para Saídas: Desligamentos → ranking motivos; Exclusões → inadimplência ──
+
+  // cleanup handled inside setTimeout since canvas is rebuilt each time
+
+  // Only active when showing Saídas or combined view with excl/desl
+  const hasDesl = data.some(d => d.label === 'Desligamentos');
+  const hasExcl = data.some(d => d.label === 'Exclusões');
+  if (!hasDesl && !hasExcl) return;
+
+  // Wait for drawDonut animation to finish (~650ms) before registering hover
+  setTimeout(() => {
+    const canvasQSLate = document.getElementById('pizzaCanvasQS');
+    if (!canvasQSLate) return;
+
+  const cxQS = canvasQSLate.width/2, cyQS = canvasQSLate.height/2, RQS = 50, riQS = 26;
+
+  function getHoveredQS(e) {
+    const rect = canvasQSLate.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (canvasQSLate.width / rect.width) - cxQS;
+    const my = (e.clientY - rect.top) * (canvasQSLate.height / rect.height) - cyQS;
+    const dist = Math.sqrt(mx*mx + my*my);
+    if (dist < riQS || dist > RQS) return -1;
+    let angle = Math.atan2(my, mx) - (-Math.PI/2);
+    if (angle < 0) angle += 2*Math.PI;
+    let cumul = 0;
+    for (let i = 0; i < data.length; i++) {
+      cumul += (data[i].value / total) * 2 * Math.PI;
+      if (angle <= cumul) return i;
+    }
+    return -1;
+  }
+
+  function paintQSHover(hovIdx) {
+    const canv = document.getElementById('pizzaCanvasQS');
+    if (!canv) return;
+    const ctx2 = canv.getContext('2d');
+    ctx2.clearRect(0,0,canv.width,canv.height);
+    let angle = -Math.PI/2;
+    data.forEach((x,i) => {
+      const slice = (x.value/total)*2*Math.PI;
+      const isHov = (i===hovIdx);
+      ctx2.beginPath(); ctx2.moveTo(cxQS,cyQS);
+      ctx2.arc(cxQS,cyQS,isHov?RQS+7:RQS,angle,angle+slice);
+      ctx2.closePath();
+      ctx2.fillStyle = x.color;
+      ctx2.globalAlpha = isHov?1:(hovIdx===-1?1:0.45);
+      ctx2.fill();
+      ctx2.strokeStyle='#0a0a0f'; ctx2.lineWidth=2; ctx2.globalAlpha=1; ctx2.stroke();
+      angle+=slice;
+    });
+    ctx2.beginPath(); ctx2.arc(cxQS,cyQS,riQS,0,2*Math.PI);
+    ctx2.fillStyle='#1a1a24'; ctx2.fill();
+    if (hovIdx>=0) {
+      const x=data[hovIdx]; const pct=(x.value/total*100).toFixed(1);
+      ctx2.fillStyle='#fff'; ctx2.font='bold 11px Inter'; ctx2.textAlign='center'; ctx2.textBaseline='middle';
+      ctx2.fillText(fmtInt(x.value),cxQS,cyQS-8);
+      ctx2.fillStyle=x.color; ctx2.font='bold 7px Inter';
+      ctx2.fillText(pct+'%',cxQS,cyQS+6);
+    } else {
+      ctx2.fillStyle='#fff'; ctx2.font='bold 11px Inter'; ctx2.textAlign='center'; ctx2.textBaseline='middle';
+      ctx2.fillText(fmtInt(total),cxQS,cyQS-8);
+      ctx2.fillStyle='#b0b0c8'; ctx2.font='bold 7px Inter';
+      ctx2.fillText(centerSub,cxQS,cyQS+5);
+    }
+  }
+
+  function renderQSTooltip(hovIdx) {
+    if (hovIdx < 0) { legElQS.innerHTML = legHTML; legElQS.className = data.length > 4 ? 'pizza-legend multi-col' : 'pizza-legend'; return; }
+    const x = data[hovIdx];
+    if (x.label === 'Desligamentos') {
+      // Aggregate motivos for the filtered period
+      const motAgg = {};
+      let totalSol = 0, totalRet = 0;
+      meses.forEach(({ano,mes}) => {
+        const dm = DESL_MOTIVOS[ano] && DESL_MOTIVOS[ano][mes];
+        if (dm) {
+          totalSol += dm.sol; totalRet += dm.ret;
+          Object.entries(dm.motivos).forEach(([k,v]) => { motAgg[k] = (motAgg[k]||0)+v; });
+        }
+      });
+      const pctRet = totalSol>0 ? (totalRet/totalSol*100).toFixed(1) : null;
+      const sorted = Object.entries(motAgg).sort((a,b)=>b[1]-a[1]);
+      const maxV = sorted.length>0 ? sorted[0][1] : 1;
+      let rankHTML = '';
+      if (sorted.length > 0) {
+        sorted.forEach(([mot,qty],i) => {
+          const pct = totalSol>0?(qty/totalSol*100).toFixed(1):'0.0';
+          const barW = Math.round(qty/maxV*100);
+          const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+          rankHTML += `
+            <div class="qs-rank-row">
+              <div class="qs-rank-pos">${medal||i+1}</div>
+              <div class="qs-rank-info">
+                <div class="qs-rank-label">${mot}</div>
+                <div class="qs-rank-bar-wrap"><div class="qs-rank-bar" style="width:${barW}%;background:${x.color}"></div></div>
+              </div>
+              <div class="qs-rank-val">${qty} <small>(${pct}%)</small></div>
+            </div>`;
+        });
+      } else {
+        rankHTML = '<div class="qs-no-data">⚠️ Dados de motivo em fechamento para este período</div>';
+      }
+      legElQS.className = 'pizza-legend qs-solo-legend';
+      legElQS.innerHTML = `
+        <div class="qs-solo-card" style="border-left:4px solid ${x.color}">
+          <div class="qs-solo-header"><span class="qs-solo-dot" style="background:${x.color}"></span><span class="qs-solo-name">Desligamentos</span><span class="qs-solo-val">${fmtInt(x.value)}</span></div>
+          ${totalSol>0?`<div class="qs-solo-sub">Solicitações: <strong>${totalSol}</strong> · Retidos: <strong>${totalRet}</strong> · <span style="color:var(--green)">${pctRet}% retido</span></div>`:''}
+          <div class="qs-rank-title">📋 Ranking de Motivos</div>
+          ${rankHTML}
+        </div>`;
+    } else if (x.label === 'Exclusões') {
+      const inadim = INADIM[last.ano] && INADIM[last.ano][last.mes];
+      const qsMes  = QS[last.ano] && QS[last.ano][last.mes];
+      const titReal = qsMes ? qsMes.titReal : null;
+      const inadimQtd = (inadim && titReal) ? Math.round(inadim * titReal) : null;
+      // Ticket médio ponderado do último mês (usa SUST direto por categoria F/I/G/N)
+      let tkMedio = null;
+      try {
+        const sustMes = SUST[last.ano] && SUST[last.ano][last.mes];
+        if (sustMes) {
+          const cats = ['F','I','G','N'];
+          const gerTotal = cats.reduce((s,c) => s + (sustMes[c]?.g || 0), 0);
+          if (gerTotal > 0) {
+            tkMedio = cats.reduce((s,c) => s + ((sustMes[c]?.tk || 0) * (sustMes[c]?.g || 0)), 0) / gerTotal;
+          }
+        }
+      } catch(e) { tkMedio = null; }
+      const receitaRisco = (inadimQtd && tkMedio) ? (inadimQtd * tkMedio / 1000) : null;
+      const inadimColor = inadim == null ? 'var(--muted)' : inadim > 0.12 ? 'var(--red)' : inadim > 0.10 ? 'var(--yellow)' : 'var(--green)';
+      const nomes = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+      legElQS.className = 'pizza-legend qs-solo-legend';
+      legElQS.innerHTML = `
+        <div class="qs-solo-card" style="border-left:4px solid ${x.color}">
+          <div class="qs-solo-header">
+            <span class="qs-solo-dot" style="background:${x.color}"></span>
+            <span class="qs-solo-name">Exclusões</span>
+            <span class="qs-solo-val">${fmtInt(x.value)}</span>
+          </div>
+          <div class="qs-solo-sub">100% por inadimplência — sócios com ≥ 3 meses sem pagamento</div>
+          <div class="qs-inadim-block">
+            <div class="qs-rank-title">📊 Inadimplência — ${nomes[last.mes]}/${last.ano}</div>
+            ${inadim != null ? `
+              <div class="qs-inadim-val" style="color:${inadimColor}">${(inadim*100).toFixed(1)}%</div>
+              <div class="qs-inadim-label">% de sócios inadimplentes</div>
+              ${inadimQtd ? `<div class="qs-inadim-label" style="margin-top:6px;">Estimativa: <strong style="color:${inadimColor}">${fmtInt(inadimQtd)} sócios</strong> inadimplentes</div>` : ''}
+              ${receitaRisco ? `<div class="qs-inadim-label" style="margin-top:2px;">Receita em risco: <strong style="color:var(--red)">~R$ ${receitaRisco.toFixed(0)} mil/mês</strong></div>` : ''}
+            ` : '<div class="qs-no-data">⚠️ Dados em fechamento para este período</div>'}
+          </div>
+        </div>`;
+    } else {
+      // Other slices: normal legend
+      legElQS.className = data.length > 4 ? 'pizza-legend multi-col' : 'pizza-legend';
+      legElQS.innerHTML = legHTML;
+    }
+  }
+
+    canvasQSLate.style.cursor = 'pointer';
+    let selectedQSIdx = -1;
+
+    canvasQSLate.addEventListener('mousemove', function(e) {
+      const idx = getHoveredQS(e);
+      canvasQSLate.style.cursor = idx >= 0 ? 'pointer' : 'default';
+    });
+
+    canvasQSLate.addEventListener('click', function(e) {
+      const idx = getHoveredQS(e);
+      if (idx < 0) {
+        selectedQSIdx = -1;
+        paintQSHover(-1);
+        renderQSTooltip(-1);
+        return;
+      }
+      if (selectedQSIdx === idx) {
+        selectedQSIdx = -1;
+        paintQSHover(-1);
+        renderQSTooltip(-1);
+      } else {
+        selectedQSIdx = idx;
+        paintQSHover(idx);
+        renderQSTooltip(idx);
+      }
+    });
+  }, 700); // wait for drawDonut animation
 }
 
 function selectCardQS(card) {
@@ -1075,7 +1396,7 @@ function selectCardQS(card) {
   const meses = getMesesQS(currentPeriod.mesIni, currentPeriod.anoIni, currentPeriod.mesFim, currentPeriod.anoFim);
   if (meses.length === 0) { showEmptyChartQS(); return; }
   const s = somaPeriodoQS(meses);
-  renderPizzaQS(s);
+  renderPizzaQS(s, meses);
 }
 
 // ── FREQ: meses no formato { ano, mes } vindos de getMesesQS (mesmo período) ──
@@ -1124,7 +1445,7 @@ function renderPizzaFreq(meses) {
 
   const body = document.getElementById('chartBodyFreq');
   if (!document.getElementById('pizzaCanvasFreq')) {
-    body.innerHTML = '<canvas id="pizzaCanvasFreq" width="130" height="130"></canvas><div class="pizza-legend freq-legend-solo" id="pizzaLegendFreq"></div>';
+    body.innerHTML = '<div style="width:155px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><canvas id="pizzaCanvasFreq" width="130" height="130"></canvas></div><div class="pizza-legend freq-legend-solo" id="pizzaLegendFreq"></div>';
   }
 
   const totalGeral = Object.values(d).reduce((a,c) => a + c.q, 0);
@@ -1136,7 +1457,7 @@ function renderPizzaFreq(meses) {
 
   document.getElementById('chartTitleFreq').textContent = 'Composição de Frequentadores — por Categoria';
   document.getElementById('chartSubtitleFreq').innerHTML =
-    `Composição: último mês <strong>(${String(last.mes).padStart(2,'0')}/${last.ano})</strong> · Passe o mouse em uma fatia para ver os detalhes`;
+    `Composição: último mês <strong>(${String(last.mes).padStart(2,'0')}/${last.ano})</strong> · Clique em uma fatia para ver os detalhes`;
 
   const data = ['F','I','G','U','C'].map(cat => ({
     cat,
@@ -1153,14 +1474,13 @@ function renderPizzaFreq(meses) {
 
   drawDonut('pizzaCanvasFreq', data, fmtInt(total), 'FREQUENTADORES');
 
-  // ── Canvas hover ──
+  // ── Canvas click (substitui hover para evitar tremida) ──
   const canvas = document.getElementById('pizzaCanvasFreq');
-  canvas._freqHoverHandler && canvas.removeEventListener('mousemove', canvas._freqHoverHandler);
-  canvas._freqLeaveHandler && canvas.removeEventListener('mouseleave', canvas._freqLeaveHandler);
+  canvas._freqClickHandler && canvas.removeEventListener('click', canvas._freqClickHandler);
 
   const cx = canvas.width/2, cy = canvas.height/2, R = 50, ri = 26;
 
-  function getHoveredSlice(e) {
+  function getClickedSlice(e) {
     const rect = canvas.getBoundingClientRect();
     const mx = (e.clientX - rect.left) * (canvas.width / rect.width) - cx;
     const my = (e.clientY - rect.top) * (canvas.height / rect.height) - cy;
@@ -1174,56 +1494,6 @@ function renderPizzaFreq(meses) {
       if (angle <= cumul) return i;
     }
     return -1;
-  }
-
-  function paintHover(hoveredIdx) {
-    const canv = document.getElementById('pizzaCanvasFreq');
-    if (!canv) return;
-    const ctx2 = canv.getContext('2d');
-    const W = canv.width, H = canv.height;
-    const cx2 = W/2, cy2 = H/2;
-    ctx2.clearRect(0,0,W,H);
-    let angle = -Math.PI/2;
-    data.forEach((x, i) => {
-      const slice = (x.value / total) * 2 * Math.PI;
-      const isHov = (i === hoveredIdx);
-      const rOuter = isHov ? R + 7 : R;
-      ctx2.beginPath();
-      ctx2.moveTo(cx2, cy2);
-      ctx2.arc(cx2, cy2, rOuter, angle, angle + slice);
-      ctx2.closePath();
-      ctx2.fillStyle = x.color;
-      ctx2.globalAlpha = isHov ? 1 : (hoveredIdx === -1 ? 1 : 0.45);
-      ctx2.fill();
-      ctx2.strokeStyle = '#0a0a0f';
-      ctx2.lineWidth = 2;
-      ctx2.globalAlpha = 1;
-      ctx2.stroke();
-      angle += slice;
-    });
-    ctx2.beginPath();
-    ctx2.arc(cx2, cy2, ri, 0, 2*Math.PI);
-    ctx2.fillStyle = '#1a1a24';
-    ctx2.fill();
-    if (hoveredIdx >= 0) {
-      const x = data[hoveredIdx];
-      const pct = (x.value/total*100).toFixed(1);
-      ctx2.fillStyle = '#ffffff';
-      ctx2.font = 'bold 11px Inter';
-      ctx2.textAlign = 'center'; ctx2.textBaseline = 'middle';
-      ctx2.fillText(fmtInt(x.value), cx2, cy2 - 8);
-      ctx2.fillStyle = x.color;
-      ctx2.font = 'bold 7px Inter';
-      ctx2.fillText(pct + '%', cx2, cy2 + 6);
-    } else {
-      ctx2.fillStyle = '#ffffff';
-      ctx2.font = 'bold 11px Inter';
-      ctx2.textAlign = 'center'; ctx2.textBaseline = 'middle';
-      ctx2.fillText(fmtInt(total), cx2, cy2 - 8);
-      ctx2.fillStyle = '#b0b0c8';
-      ctx2.font = 'bold 7px Inter';
-      ctx2.fillText('FREQUENTADORES', cx2, cy2 + 5);
-    }
   }
 
   // Render legend for a single category (solo mode)
@@ -1295,19 +1565,74 @@ function renderPizzaFreq(meses) {
     leg.style.pointerEvents = 'auto';
   }
 
-  canvas._freqHoverHandler = function(e) {
-    const idx = getHoveredSlice(e);
+  let selectedFreqIdx = -1;
+
+  function paintSelected(idx) {
+    const canv = document.getElementById('pizzaCanvasFreq');
+    if (!canv) return;
+    const ctx2 = canv.getContext('2d');
+    const W = canv.width, H = canv.height;
+    const cx2 = W/2, cy2 = H/2;
+    ctx2.clearRect(0,0,W,H);
+    let angle = -Math.PI/2;
+    data.forEach((x, i) => {
+      const slice = (x.value / total) * 2 * Math.PI;
+      const isSel = (i === idx);
+      ctx2.beginPath(); ctx2.moveTo(cx2, cy2);
+      ctx2.arc(cx2, cy2, isSel ? R+7 : R, angle, angle+slice);
+      ctx2.closePath();
+      ctx2.fillStyle = x.color;
+      ctx2.globalAlpha = isSel ? 1 : (idx === -1 ? 1 : 0.55);
+      ctx2.fill();
+      ctx2.strokeStyle = '#0a0a0f'; ctx2.lineWidth = 2; ctx2.globalAlpha = 1;
+      ctx2.stroke();
+      angle += slice;
+    });
+    ctx2.beginPath(); ctx2.arc(cx2, cy2, ri, 0, 2*Math.PI);
+    ctx2.fillStyle = '#1a1a24'; ctx2.fill();
+    if (idx >= 0) {
+      const x = data[idx];
+      const pct = (x.value/total*100).toFixed(1);
+      ctx2.fillStyle = '#fff'; ctx2.font = 'bold 11px Inter';
+      ctx2.textAlign = 'center'; ctx2.textBaseline = 'middle';
+      ctx2.fillText(fmtInt(x.value), cx2, cy2-8);
+      ctx2.fillStyle = x.color; ctx2.font = 'bold 7px Inter';
+      ctx2.fillText(pct+'%', cx2, cy2+6);
+    } else {
+      ctx2.fillStyle = '#fff'; ctx2.font = 'bold 11px Inter';
+      ctx2.textAlign = 'center'; ctx2.textBaseline = 'middle';
+      ctx2.fillText(fmtInt(total), cx2, cy2-8);
+      ctx2.fillStyle = '#b0b0c8'; ctx2.font = 'bold 7px Inter';
+      ctx2.fillText('FREQUENTADORES', cx2, cy2+5);
+    }
+  }
+
+  canvas._freqClickHandler = function(e) {
+    const idx = getClickedSlice(e);
+    if (idx < 0) {
+      // Clique fora das fatias — deselecionar
+      selectedFreqIdx = -1;
+      canvas.style.cursor = 'default';
+      paintSelected(-1);
+      renderSoloLegend(-1);
+      return;
+    }
+    if (selectedFreqIdx === idx) {
+      // Clique na mesma fatia — fechar
+      selectedFreqIdx = -1;
+      paintSelected(-1);
+      renderSoloLegend(-1);
+    } else {
+      selectedFreqIdx = idx;
+      paintSelected(idx);
+      renderSoloLegend(idx);
+    }
+  };
+  canvas.addEventListener('mousemove', (e) => {
+    const idx = getClickedSlice(e);
     canvas.style.cursor = idx >= 0 ? 'pointer' : 'default';
-    paintHover(idx);
-    renderSoloLegend(idx);
-  };
-  canvas._freqLeaveHandler = function() {
-    canvas.style.cursor = 'default';
-    paintHover(-1);
-    renderSoloLegend(-1);
-  };
-  canvas.addEventListener('mousemove', canvas._freqHoverHandler);
-  canvas.addEventListener('mouseleave', canvas._freqLeaveHandler);
+  });
+  canvas.addEventListener('click', canvas._freqClickHandler);
 
   // Initial state: legend hidden
   const leg = document.getElementById('pizzaLegendFreq');
@@ -1475,6 +1800,223 @@ function arrowHTML(curr, base, higherIsBetter, label) {
 }
 
 // ── RENDER PRINCIPAL ──
+// ═══════════════════════════════════════════════════════════
+//  RANKING — MOTIVOS DE DESLIGAMENTO
+// ═══════════════════════════════════════════════════════════
+function getMesesRanking() {
+  const { mesIni, anoIni, mesFim, anoFim } = currentPeriod;
+  const result = [];
+  let a = anoIni, m = mesIni, guard = 0;
+  while ((a < anoFim || (a === anoFim && m <= mesFim)) && guard < 60) {
+    if (DESL_MOTIVOS[a] && DESL_MOTIVOS[a][m]) result.push({ ano:a, mes:m });
+    m++; if (m > 12) { m = 1; a++; }
+    guard++;
+  }
+  return result;
+}
+
+function renderRankingDesl() {
+  const section  = document.getElementById('rankingDeslSection');
+  const body     = document.getElementById('rankingDeslBody');
+  const subtitle = document.getElementById('rankingDeslSubtitle');
+  const allMeses = getMesesRanking();
+
+  if (allMeses.length === 0) {
+    section.style.display = 'none';
+    updateRankingsRow();
+    return;
+  }
+
+  const motAgg = {};
+  let totalSol = 0, totalRet = 0;
+  const nomes = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const mesesLabel = [];
+
+  allMeses.forEach(({ano, mes}) => {
+    const dm = DESL_MOTIVOS[ano][mes];
+    totalSol += dm.sol;
+    totalRet += dm.ret;
+    Object.entries(dm.motivos).forEach(([k,v]) => { motAgg[k] = (motAgg[k]||0)+v; });
+    mesesLabel.push(`${nomes[mes]}/${String(ano).slice(2)}`);
+  });
+
+  section.style.display = 'block';
+  updateRankingsRow();
+
+  subtitle.textContent = `${mesesLabel.join(', ')} · ${totalSol} solicitações`;
+  const totalDesl = totalSol - totalRet;
+  const pctRet = totalSol > 0 ? (totalRet/totalSol*100).toFixed(1) : '0.0';
+  const sorted  = Object.entries(motAgg).sort((a,b) => b[1]-a[1]);
+  const maxV    = sorted.length > 0 ? sorted[0][1] : 1;
+
+  const MOTIVO_ICONS = {
+    'não utilização':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#e8192c" stroke-width="2"/><path d="M8 8l8 8M16 8l-8 8" stroke="#e8192c" stroke-width="2.5" stroke-linecap="round"/></svg>','Não utilização':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#e8192c" stroke-width="2"/><path d="M8 8l8 8M16 8l-8 8" stroke="#e8192c" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    'financeiro':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#00d68f" opacity="0.2"/><text x="12" y="17" font-size="14" font-weight="bold" fill="#00d68f" text-anchor="middle" font-family="Arial">$</text></svg>','Financeiro':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#00d68f" opacity="0.2"/><text x="12" y="17" font-size="14" font-weight="bold" fill="#00d68f" text-anchor="middle" font-family="Arial">$</text></svg>',
+    'mudança':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#3d7bff"/><path d="M19 3.5c.28.9.43 1.87.43 2.87" stroke="#3d7bff" stroke-width="1.5" stroke-linecap="round"/><path d="M5 6.37C5.43 4.37 6.93 2.73 8.87 2.13" stroke="#3d7bff" stroke-width="1.5" stroke-linecap="round"/></svg>','Mudança':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#3d7bff"/><path d="M19 3.5c.28.9.43 1.87.43 2.87" stroke="#3d7bff" stroke-width="1.5" stroke-linecap="round"/><path d="M5 6.37C5.43 4.37 6.93 2.73 8.87 2.13" stroke="#3d7bff" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    'sem motivo':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L2 21h20L12 3z" fill="#ffd32a" stroke="#ffd32a" stroke-width="1"/><path d="M12 10v4" stroke="#000" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#000"/></svg>','Sem motivo':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L2 21h20L12 3z" fill="#ffd32a" stroke="#ffd32a" stroke-width="1"/><path d="M12 10v4" stroke="#000" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#000"/></svg>',
+    'localização':'📍','Localização':'📍',
+    'saúde':'🏥','Saúde':'🏥',
+    'desemprego':'📉','Desemprego':'📉',
+  };
+  const barColors = ['#e8192c','#3d7bff','#ffd32a','#00d68f','#a855f7','#f97316'];
+
+  const rowsHTML = sorted.map(([mot, qty], i) => {
+    const pct  = totalSol > 0 ? (qty/totalSol*100).toFixed(1) : '0.0';
+    const barW = Math.round(qty/maxV*100);
+    const color = barColors[i % barColors.length];
+    const icon  = MOTIVO_ICONS[mot] || `${i+1}°`;
+    return `
+      <div class="desl-rank-row">
+        <div class="desl-rank-pos">${icon}</div>
+        <div class="desl-rank-info">
+          <div class="desl-rank-label">${mot}</div>
+          <div class="desl-rank-bar-wrap">
+            <div class="desl-rank-bar" style="width:${barW}%;background:${color}"></div>
+          </div>
+        </div>
+        <div class="desl-rank-right">
+          <div class="desl-rank-qty">${qty}</div>
+          <div class="desl-rank-pct">${pct}%</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="desl-rank-summary">
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">Solicitações</span>
+        <span class="desl-rank-sum-val">${totalSol}</span>
+      </div>
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">Desligados</span>
+        <span class="desl-rank-sum-val" style="color:var(--red)">${totalDesl}</span>
+      </div>
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">Retidos</span>
+        <span class="desl-rank-sum-val" style="color:var(--green)">${totalRet}</span>
+      </div>
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">% Retido</span>
+        <span class="desl-rank-sum-val" style="color:var(--green)">${pctRet}%</span>
+      </div>
+    </div>
+    <div class="desl-rank-rows-wrap">${rowsHTML}</div>`;
+}
+
+// Mostra a linha de rankings somente quando pelo menos um está visível
+function updateRankingsRow() {
+  const deslVis = document.getElementById('rankingDeslSection').style.display !== 'none';
+  const freqVis = document.getElementById('rankingFreqSection').style.display !== 'none';
+  document.getElementById('rankingsRow').style.display = (deslVis || freqVis) ? 'grid' : 'none';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RANKING — FREQUÊNCIA POR CATEGORIA
+//  Estoque: último mês do período filtrado
+//  Ordena do maior para o menor % de acesso
+// ═══════════════════════════════════════════════════════════
+function renderRankingFreq() {
+  const section  = document.getElementById('rankingFreqSection');
+  const body     = document.getElementById('rankingFreqBody');
+  const subtitle = document.getElementById('rankingFreqSubtitle');
+
+  // Obter último mês com dados de ACESSO no período
+  const { mesIni, anoIni, mesFim, anoFim } = currentPeriod;
+  let lastMes = null;
+  let a = anoIni, m = mesIni, guard = 0;
+  while ((a < anoFim || (a === anoFim && m <= mesFim)) && guard < 60) {
+    if (ACESSO[a] && ACESSO[a][m]) lastMes = { ano:a, mes:m };
+    m++; if (m > 12) { m = 1; a++; }
+    guard++;
+  }
+
+  if (!lastMes) {
+    section.style.display = 'none';
+    updateRankingsRow();
+    return;
+  }
+
+  const ac = ACESSO[lastMes.ano][lastMes.mes];
+  const fr = FREQ[lastMes.ano] && FREQ[lastMes.ano][lastMes.mes];
+  const nomes = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+  section.style.display = 'block';
+  updateRankingsRow();
+  subtitle.textContent = `Último mês do período: ${nomes[lastMes.mes]}/${lastMes.ano} · estoque`;
+
+  // Montar dados por categoria — ordenar por % de acesso (maior = mais engajado)
+  const cats = ['F','I','G','U'];
+  const catNames = { F:'Familiar', I:'Individual', G:'Vitalício', U:'Usuário Não Sócio' };
+  const catColors = { F:'#3d7bff', I:'#ffd32a', G:'#00d68f', U:'#a855f7' };
+
+  const rows = cats.map(cat => {
+    const acessou = ac[cat] ? ac[cat].a : 0;
+    const naoAcessou = ac[cat] ? ac[cat].s : 0;
+    const total = acessou + naoAcessou;
+    const pctAc = total > 0 ? (acessou / total * 100) : 0;
+    const freq = fr ? fr[cat] : null;
+    const totalFreq = freq ? freq.q : total;
+    const media = totalFreq > 0 ? (acessou / totalFreq).toFixed(2) : '—';
+    return { cat, acessou, naoAcessou, total: totalFreq, pctAc, media };
+  }).filter(r => r.total > 0)
+    .sort((a, b) => b.pctAc - a.pctAc);
+
+  const maxAc = rows.length > 0 ? rows[0].pctAc : 100;
+
+  // Totais gerais
+  const totalAcessou   = rows.reduce((s, r) => s + r.acessou, 0);
+  const totalFreqGeral = rows.reduce((s, r) => s + r.total, 0);
+  const pctGeralAc     = totalFreqGeral > 0 ? (totalAcessou / totalFreqGeral * 100).toFixed(1) : '0.0';
+  const mediaGeral     = totalFreqGeral > 0 ? (totalAcessou / totalFreqGeral).toFixed(2) : '—';
+
+  const rankColors = ['#e8192c','#3d7bff','#ffd32a','#00d68f','#a855f7'];
+
+  const rowsHTML = rows.map((r, i) => {
+    const pctStr = r.pctAc.toFixed(1);
+    const barW   = Math.round(r.pctAc / 100 * 100); // barra % direto
+    const color  = catColors[r.cat] || rankColors[i];
+    const engLabel = r.pctAc >= 70 ? '🟢' : r.pctAc >= 50 ? '🟡' : '🔴';
+    return `
+      <div class="desl-rank-row">
+        <div class="desl-rank-pos" style="font-size:18px;">${engLabel}</div>
+        <div class="desl-rank-info">
+          <div class="desl-rank-label">${catNames[r.cat]}</div>
+          <div class="desl-rank-bar-wrap">
+            <div class="desl-rank-bar" style="width:${barW}%;background:${color}"></div>
+          </div>
+        </div>
+        <div class="desl-rank-right">
+          <div class="desl-rank-qty">${pctStr}%</div>
+          <div class="desl-rank-pct">${fmtInt(r.acessou)} vieram · ${r.media} freq./freq.</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="desl-rank-summary">
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">Total frequentadores</span>
+        <span class="desl-rank-sum-val">${fmtInt(totalFreqGeral)}</span>
+      </div>
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">Acessaram o clube</span>
+        <span class="desl-rank-sum-val" style="color:var(--green)">${fmtInt(totalAcessou)} (${pctGeralAc}%)</span>
+      </div>
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">Não acessaram</span>
+        <span class="desl-rank-sum-val" style="color:var(--muted)">${fmtInt(totalFreqGeral - totalAcessou)}</span>
+      </div>
+      <div class="desl-rank-sum-item">
+        <span class="desl-rank-sum-label">Média geral</span>
+        <span class="desl-rank-sum-val">${mediaGeral} freq./freq.</span>
+      </div>
+    </div>
+    <div class="desl-rank-rows-wrap">${rowsHTML}</div>
+    <div style="margin-top:8px; font-size:10px; color:var(--muted);">
+      🟢 ≥70% engajados · 🟡 50–70% · 🔴 &lt;50% · Ordenado do mais ao menos frequente
+    </div>`;
+}
+
 function render() {
   const { mesIni, anoIni, mesFim, anoFim } = currentPeriod;
   const meses = getMeses(mesIni, anoIni, mesFim, anoFim);
@@ -1492,6 +2034,8 @@ function render() {
     showEmptyChart();
     renderSust();
     renderQS();
+    renderRankingDesl();
+    renderRankingFreq();
     return;
   }
 
@@ -1521,7 +2065,8 @@ function render() {
   renderPizza(s);
   renderSust();
   renderQS();
-
+  renderRankingDesl();
+  renderRankingFreq();
   ['kpiRow'].forEach(id => {
     const el = document.getElementById(id);
     el.classList.remove('fade'); void el.offsetWidth; el.classList.add('fade');
