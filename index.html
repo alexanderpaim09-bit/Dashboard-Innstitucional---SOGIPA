@@ -39,20 +39,22 @@ header {
 .date-info { font-size:13px; color:var(--muted); text-align:right; }
 .date-info span { display:block; color:var(--text); font-weight:700; font-size:14px; margin-top:1px; }
 .live-pill {
-  display:flex; align-items:center; gap:6px; padding:5px 13px;
-  background:rgba(0,214,143,.18); border:1px solid rgba(0,214,143,.5);
-  border-radius:18px; font-size:12px; font-weight:800; color:var(--green);
-  letter-spacing:1.2px;
+  display:flex; align-items:center; gap:7px; padding:6px 14px;
+  background:rgba(0,255,170,.10); border:1px solid rgba(0,255,170,.45);
+  border-radius:18px; font-size:12px; font-weight:800; color:#00ffaa;
+  letter-spacing:1.5px; box-shadow:0 0 10px rgba(0,255,170,.20);
+  text-shadow:0 0 8px rgba(0,255,170,.6);
 }
 .live-pill::before {
-  content:''; width:6px; height:6px; border-radius:50%; background:var(--green);
-  animation:pulse 2s infinite;
+  content:''; width:7px; height:7px; border-radius:50%; background:#00ffaa;
+  animation:pulse 1.8s infinite; box-shadow:0 0 6px #00ffaa;
 }
 .live-pill.updating {
-  background:rgba(255,211,42,.20); border:1px solid rgba(255,211,42,.55); color:var(--yellow);
+  background:rgba(255,211,42,.15); border:1px solid rgba(255,211,42,.50);
+  color:#ffd32a; box-shadow:0 0 8px rgba(255,211,42,.15); text-shadow:none;
 }
-.live-pill.updating::before { background:var(--yellow); }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+.live-pill.updating::before { background:var(--yellow); box-shadow:0 0 6px #ffd32a; }
+@keyframes pulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.3; transform:scale(.85)} }
 
 @media (max-width: 600px) {
   /* Header */
@@ -958,10 +960,10 @@ const ACESSO = {
   },
   2026: {
     1:  { F:{a:5543,s:4609}, I:{a:411,s:276},  G:{a:241,s:706},  U:{a:362,s:2447},  E:{a:1283,s:0}, EV:{a:2708,s:0} },
-    2:  { F:{a:5587,s:4568}, I:{a:411,s:280},  G:{a:238,s:702},  U:{a:696,s:2300},  E:{a:971,s:0}, EV:{a:5808,s:0} },
-    3:  { F:{a:6006,s:3691}, I:{a:473,s:222},  G:{a:329,s:624},  U:{a:1451,s:1792}, E:{a:1798,s:0}, EV:{a:4782,s:0} },
-    4:  { F:{a:5573,s:3802}, I:{a:441,s:232},  G:{a:318,s:634},  U:{a:1504,s:1366}, E:{a:1512,s:0}, EV:{a:4930,s:0} },
-    5:  { F:{a:5293,s:3732}, I:{a:428,s:244},  G:{a:313,s:628},  U:{a:1630,s:1333}, E:{a:1475,s:0}, EV:{a:3365,s:0} },
+    2:  { F:{a:5587,s:4568}, I:{a:411,s:280},  G:{a:238,s:702},  U:{a:696,s:2300},  E:{a:1690,s:0}, EV:{a:6992,s:0} },
+    3:  { F:{a:6006,s:3691}, I:{a:473,s:222},  G:{a:329,s:624},  U:{a:1451,s:1792}, E:{a:1759,s:0}, EV:{a:7649,s:0} },
+    4:  { F:{a:5573,s:3802}, I:{a:441,s:232},  G:{a:318,s:634},  U:{a:1504,s:1366}, E:{a:1362,s:0}, EV:{a:6127,s:0} },
+    5:  { F:{a:2283,s:6742}, I:{a:423,s:264},  G:{a:218,s:1959}, U:{a:1600,s:1209}, E:{a:1366,s:0}, EV:{a:5317,s:0} },
   }
 };
 
@@ -2148,115 +2150,6 @@ function updateRankingsRow() {
 //  Estoque: último mês do período filtrado
 //  Ordena do maior para o menor % de acesso
 // ═══════════════════════════════════════════════════════════
-function renderRankingFreq() {
-  const section  = document.getElementById('rankingFreqSection');
-  const body     = document.getElementById('rankingFreqBody');
-  const subtitle = document.getElementById('rankingFreqSubtitle');
-
-  // Obter último mês com dados de ACESSO no período
-  const { mesIni, anoIni, mesFim, anoFim } = currentPeriod;
-  let lastMes = null;
-  let a = anoIni, m = mesIni, guard = 0;
-  while ((a < anoFim || (a === anoFim && m <= mesFim)) && guard < 60) {
-    if (ACESSO[a] && ACESSO[a][m]) lastMes = { ano:a, mes:m };
-    m++; if (m > 12) { m = 1; a++; }
-    guard++;
-  }
-
-  if (!lastMes) {
-    section.style.display = 'none';
-    updateRankingsRow();
-    return;
-  }
-
-  const ac = ACESSO[lastMes.ano][lastMes.mes];
-  const fr = FREQ[lastMes.ano] && FREQ[lastMes.ano][lastMes.mes];
-  const nomes = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-
-  section.style.display = 'block';
-  updateRankingsRow();
-  subtitle.textContent = `Composição: último mês do período (${nomes[lastMes.mes]}/${lastMes.ano})`;
-
-  // Montar dados por categoria — ordenar por % de acesso (maior = mais engajado)
-  const cats = ['F','I','G','U'];
-  const catNames = { F:'Familiar', I:'Individual', G:'Vitalício', U:'Usuário Não Sócio' };
-  const catColors = { F:'#3d7bff', I:'#ffd32a', G:'#00d68f', U:'#a855f7' };
-
-  const rows = cats.map(cat => {
-    const acessou = ac[cat] ? ac[cat].a : 0;
-    const naoAcessou = ac[cat] ? ac[cat].s : 0;
-    const total = acessou + naoAcessou;
-    const pctAc = total > 0 ? (acessou / total * 100) : 0;
-    const freq = fr ? fr[cat] : null;
-    const totalFreq = freq ? freq.q : total;
-    const media = totalFreq > 0 ? (acessou / totalFreq).toFixed(2) : '—';
-    return { cat, acessou, naoAcessou, total: totalFreq, pctAc, media };
-  }).filter(r => r.total > 0)
-    .sort((a, b) => b.pctAc - a.pctAc);
-
-  const maxAc = rows.length > 0 ? rows[0].pctAc : 100;
-
-  // Totais gerais
-  const totalAcessou   = rows.reduce((s, r) => s + r.acessou, 0);
-  const totalFreqGeral = rows.reduce((s, r) => s + r.total, 0);
-  const pctGeralAc     = totalFreqGeral > 0 ? (totalAcessou / totalFreqGeral * 100).toFixed(1) : '0.0';
-  const mediaGeral     = totalFreqGeral > 0 ? (totalAcessou / totalFreqGeral).toFixed(2) : '—';
-
-  const maxPct = rows.length > 0 ? rows[0].pctAc : 100;
-
-  const rowsHTML = rows.map((r, i) => {
-    const pctAcStr  = r.pctAc.toFixed(1);
-    const pctNaoStr = (100 - r.pctAc).toFixed(1);
-    const barW      = Math.round(r.pctAc / maxPct * 100);
-    const color     = catColors[r.cat];
-    const icon      = r.pctAc >= 70 ? '🟢' : r.pctAc >= 50 ? '🟡' : '🔴';
-    return `
-      <div class="desl-rank-row">
-        <div class="desl-rank-pos">${icon}</div>
-        <div class="desl-rank-info">
-          <div class="desl-rank-label">${catNames[r.cat]}</div>
-          <div class="desl-rank-bar-wrap">
-            <div class="desl-rank-bar" style="width:${barW}%;background:${color}"></div>
-          </div>
-        </div>
-        <div class="desl-rank-right" style="min-width:160px; text-align:right;">
-          <div style="display:flex; gap:14px; justify-content:flex-end; align-items:baseline;">
-            <span style="font-size:11px; color:var(--green);">✔ ${fmtInt(r.acessou)} <small style="color:var(--muted)">(${pctAcStr}%)</small></span>
-            <span style="font-size:11px; color:var(--muted);">✖ ${fmtInt(r.naoAcessou)} <small>(${pctNaoStr}%)</small></span>
-          </div>
-          <div class="desl-rank-pct" style="margin-top:2px;">${r.media} freq./freq.</div>
-        </div>
-      </div>`;
-  }).join('');
-
-  body.innerHTML = `
-    <div class="desl-rank-summary">
-      <div class="desl-rank-sum-item">
-        <span class="desl-rank-sum-label">Total frequentadores</span>
-        <span class="desl-rank-sum-val">${fmtInt(totalFreqGeral)}</span>
-        <span style="font-size:9px; color:var(--muted); margin-top:2px;">🟢 ≥70% · 🟡 50–70% · 🔴 &lt;50%<br>✔ vieram · ✖ não vieram</span>
-      </div>
-      <div class="desl-rank-sum-item">
-        <span class="desl-rank-sum-label">Acessaram o clube</span>
-        <span class="desl-rank-sum-val" style="color:var(--green)">${fmtInt(totalAcessou)} (${pctGeralAc}%)</span>
-      </div>
-      <div class="desl-rank-sum-item">
-        <span class="desl-rank-sum-label">Não acessaram</span>
-        <span class="desl-rank-sum-val" style="color:var(--muted)">${fmtInt(totalFreqGeral - totalAcessou)}</span>
-      </div>
-      <div class="desl-rank-sum-item">
-        <span class="desl-rank-sum-label">Média geral</span>
-        <span class="desl-rank-sum-val">${mediaGeral} freq./freq.</span>
-      </div>
-    </div>
-    <div class="desl-rank-rows-wrap">${rowsHTML}</div>
-`;
-}
-
-// ═══════════════════════════════════════════════════════════
-//  FREQUÊNCIA DE ACESSOS — POR CATEGORIA (Donut Chart)
-//  Mostra donut com total de acessos por categoria no período
-//  Inclui dados de evento e convênio; legenda detalhada ao clicar
 // ═══════════════════════════════════════════════════════════
 function renderRankingFreq() {
   const section  = document.getElementById('rankingFreqSection');
@@ -2307,23 +2200,27 @@ function renderRankingFreq() {
 
   // Get FREQ data for the last month (for context of total frequentadores)
   const frLast = FREQ[lastMes.ano] && FREQ[lastMes.ano][lastMes.mes];
+  // Acessos do ÚLTIMO MÊS — para calcular média (regra: soma período, média último mês)
+  const acLastMes = ACESSO[lastMes.ano][lastMes.mes];
 
   // Build donut data — acessos realizados por categoria
   const data = catKeys.map(cat => ({
     cat,
     label: catNames[cat],
-    value: agg[cat].a,
+    value: agg[cat].a,                          // soma do período
     naoAcessou: agg[cat].s,
     color: catColors[cat],
     totalFreq: frLast && frLast[cat] ? frLast[cat].q : (agg[cat].a + agg[cat].s),
-    // Para E (Convidados) e EV (Eventos): pctEngaj não se aplica (são 100% visitantes por definição)
+    // Acessos do último mês para a média por categoria
+    aLastMes: acLastMes && acLastMes[cat] ? acLastMes[cat].a : 0,
     pctEngaj: (cat === 'E' || cat === 'EV') ? null : (agg[cat].a + agg[cat].s) > 0 ? (agg[cat].a / (agg[cat].a + agg[cat].s) * 100) : 0
   })).filter(x => x.value > 0);
 
-  const totalAcessos = data.reduce((s,x) => s + x.value, 0);
-  const totalFreqGeral = data.reduce((s,x) => s + x.totalFreq, 0);
-  const pctGeralAc = totalFreqGeral > 0 ? (totalAcessos / totalFreqGeral * 100).toFixed(1) : '—';
-  const mediaGeral = totalFreqGeral > 0 ? (totalAcessos / totalFreqGeral).toFixed(2) : '—';
+  const totalAcessos    = data.reduce((s,x) => s + x.value, 0);
+  const totalFreqGeral  = data.reduce((s,x) => s + x.totalFreq, 0);
+  const totalLastMes    = data.reduce((s,x) => s + x.aLastMes, 0);
+  const pctGeralAc      = totalFreqGeral > 0 ? (totalAcessos / totalFreqGeral * 100).toFixed(1) : '—';
+  const mediaGeral      = totalFreqGeral > 0 ? (totalLastMes / totalFreqGeral).toFixed(2) : '—';
 
   if (totalAcessos === 0) {
     section.style.display = 'none';
@@ -2390,7 +2287,7 @@ function renderRankingFreq() {
             <span>Taxa de frequência geral</span><strong style="color:var(--green); font-size:14px;">${pctGeralAc}%</strong>
           </div>
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-            <span>Média geral de acessos</span><strong style="color:var(--text); font-size:13px;">${mediaGeral} ac./freq.</strong>
+            <span>Média de acessos (${nomes[lastMes.mes]}/${lastMes.ano})</span><strong style="color:var(--text); font-size:13px;">${mediaGeral} ac./freq.</strong>
           </div>
           <div style="font-size:11px; color:var(--muted); border-top:1px solid var(--border); padding-top:5px;">💡 Clique em uma fatia para ver detalhes da categoria</div>
         </div>
@@ -2407,7 +2304,7 @@ function renderRankingFreq() {
       const barColor = isConv ? 'var(--blue)' : x.pctEngaj >= 60 ? 'var(--green)' : x.pctEngaj >= 40 ? 'var(--yellow)' : 'var(--red)';
       const engPct   = isConv ? 100 : Math.round(x.pctEngaj);
       const totalAcSAc = x.value + x.naoAcessou;
-      const media    = x.totalFreq > 0 ? (x.value / x.totalFreq).toFixed(2) : '—';
+      const media    = x.totalFreq > 0 ? (x.aLastMes / x.totalFreq).toFixed(2) : '—';
 
       // Subcategorias
       const subsHTML = (() => {
@@ -2448,7 +2345,7 @@ function renderRankingFreq() {
               <span class="freq-media-val" style="color:${barColor};">${isConv ? fmtInt(x.value)+' acessos' : pctAc+'% frequentaram'}</span>
             </div>
             <div class="freq-solo-media" style="margin-top:2px;">
-              <span class="freq-media-label">Média de acessos</span>
+              <span class="freq-media-label">Média de acessos (${nomes[lastMes.mes]}/${lastMes.ano})</span>
               <span style="font-size:13px; font-weight:700; color:var(--muted);">${media} ac./freq.</span>
             </div>
           </div>
@@ -2708,12 +2605,20 @@ function setCurrentDate() {
 }
 setCurrentDate();
 
-// ── PILL DE FECHAMENTO DO MÊS (dias 14–17) ──
+// ── PILL — verde piscante = dados atualizados / amarelo = em fechamento ──
 function setLivePill() {
   const pill = document.getElementById('livePill');
-  // DRE em fechamento — mantido fixo até conclusão da atualização
-  pill.textContent = 'DADOS EM ATUALIZAÇÃO';
-  pill.classList.add('updating');
+  const hoje = new Date();
+  const dia  = hoje.getDate();
+  // Entre dias 1–10 do mês: DRE ainda em fechamento → amarelo
+  if (dia >= 1 && dia <= 10) {
+    pill.textContent = 'DADOS EM FECHAMENTO';
+    pill.classList.add('updating');
+  } else {
+    // Dados fechados → verde piscante
+    pill.textContent = 'DADOS ATUALIZADOS';
+    pill.classList.remove('updating');
+  }
 }
 setLivePill();
 
